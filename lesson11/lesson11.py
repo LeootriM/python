@@ -54,6 +54,9 @@ with open("example.txt" , "r") as file:
         line = file.readLine()
         print(line)
 
+        if os.path.exists("example.txt")
+            print("file exists")
+
 
 
 
