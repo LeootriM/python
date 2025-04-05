@@ -42,7 +42,32 @@ with st.sidebar.form("book_form"):
             'Price': new_price,
             'Year': new_year,
             'Genre': new_Genre,
+
         }
+
+        books_df = pd.concat([pd.DataFrame(new_data, index=[0]), books_df] , ignore_index=True)
+    books_df.to_csv('Lesson18/test.csv' , index=False)
+    st.sidebar.success("New book added successfully")
+
+st.sidebar.header("Filter options")
+selected_author = st.sidebar.selectbox("Select Author", ['ALL'] +list(books_df['Author'].unique()))
+selected_Year = st.sidebar.selectbox("Select Year", ['ALL'] +list(books_df['Year'].unique()))
+selected_genre = st.sidebar.selectbox("Select Genre", ['ALL'] +list(books_df['Genre'].unique()))
+min_rating = st.sidebar.slider("Minimum user rating " , 0.0 , 5.0, 0.0 , 0.1)
+max_price = st.sidebar.slider("Maximum price" , 0 , books_df['Price'].max() , books_df['Price'].max())
+
+filtered_Book_df = books_df.copy()
+
+if selected_author !="All":
+    filtered_Book_df = filtered_Book_df[filtered_Book_df['Author'] == selected_author]
+if selected_Year !="All":
+    filtered_Book_df = filtered_Book_df[filtered_Book_df['Year'] == selected_Year]
+if selected_genre !="All":
+    filtered_Book_df = filtered_Book_df[filtered_Book_df['Genre'] == selected_genre]
+
+filtered_Book_df = filtered_Book_df[(filtered_Book_df['User Rating'] >= min_rating) & filtered_Book_df['Price']<= max_price]
+
+
 
 st.subheader('Summary')
 total_books = books_df.shape[0]
